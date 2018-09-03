@@ -33,51 +33,52 @@ def adjustFont(text, size, fontName):
         font.size = Pt(size)
         font.name = fontName
 
-document = Document()
+def makeDokument(args):
+    document = Document()
 
-title = document.add_paragraph('Timerapport')
-adjustFont(title, 26, "Calibri")
+    title = document.add_paragraph('Timerapport')
+    adjustFont(title, 26, "Calibri")
 
-periode = ["Periode:", _date.month_range()]
-konsulent = ["Konsulent:", "TODO"]
-oppdrag = ["Oppdrag:", "TODO"]
-kunde = ["Kunde:", "TODO"]
+    periode = ["Periode:", _date.month_range()]
+    konsulent = ["Konsulent:", args['konsulent'] or "TODO"]
+    oppdrag = ["Oppdrag:", args['oppdrag'] or "TODO"]
+    kunde = ["Kunde:", args['kunde'] or "TODO"]
 
-konsulentRows = map(enumerate, [periode, konsulent, oppdrag, kunde])
-konsulentTabellTuppel = list(enumerate(["Periode:", "Konsulent:", "Oppdrag:", "Kunde:"]))
-konsulentTabellWidth = [3.05, 9.13]
+    konsulentRows = map(enumerate, [periode, konsulent, oppdrag, kunde])
+    konsulentTabellTuppel = list(enumerate(["Periode:", "Konsulent:", "Oppdrag:", "Kunde:"]))
+    konsulentTabellWidth = [3.05, 9.13]
 
-konsulentTabell = document.add_table(0,0)
-addColumnsToTable(konsulentTabell, konsulentTabellWidth)
-for row in konsulentRows:
-    addRowToTable(konsulentTabell, row)
-konsulentTabell.style = "Table Grid"
+    konsulentTabell = document.add_table(0,0)
+    addColumnsToTable(konsulentTabell, konsulentTabellWidth)
+    for row in konsulentRows:
+        addRowToTable(konsulentTabell, row)
+    konsulentTabell.style = "Table Grid"
 
-document.add_paragraph('')
-sammendrag = document.add_paragraph('Sammendrag')
-adjustFont(sammendrag, 14, "Calibri")
+    document.add_paragraph('')
+    sammendrag = document.add_paragraph('Sammendrag')
+    adjustFont(sammendrag, 14, "Calibri")
 
-uker = _date.week_range()
+    uker = _date.week_range()
 
-sammendragTabellWidth = [3.19, 5, 4]
-sammendragBody = map(enumerate, uker)
-sammendragHead = list(enumerate(["Uke",	"Dato", "Timer"]))
-sammendragFoot = list(enumerate(["TOTALT", _date.last_date(), 0]))
-sammendragRows = list([sammendragHead, *sammendragBody, sammendragFoot])
+    sammendragTabellWidth = [3.19, 5, 4]
+    sammendragBody = map(enumerate, uker)
+    sammendragHead = list(enumerate(["Uke",	"Dato", "Timer"]))
+    sammendragFoot = list(enumerate(["TOTALT", _date.last_date(), 0]))
+    sammendragRows = list([sammendragHead, *sammendragBody, sammendragFoot])
 
-sammendragTabell = document.add_table(0,0)
-addColumnsToTable(sammendragTabell, sammendragTabellWidth)
-for row in sammendragRows:
-    addRowToTable(sammendragTabell, row)
-sammendragTabell.style = "Table Grid"
+    sammendragTabell = document.add_table(0,0)
+    addColumnsToTable(sammendragTabell, sammendragTabellWidth)
+    for row in sammendragRows:
+        addRowToTable(sammendragTabell, row)
+    sammendragTabell.style = "Table Grid"
 
-document.add_paragraph('')
-
-for uke in uker:
-    p = document.add_paragraph("Uke {0} - {1}".format(uke[0], uke[1]))
-    adjustFont(p, 14, "Calibri")
-    
-    document.add_picture('placeholder.gif', width=Inches(3))
     document.add_paragraph('')
 
-document.save('generated.docx')
+    for uke in uker:
+        p = document.add_paragraph("Uke {0} - {1}".format(uke[0], uke[1]))
+        adjustFont(p, 14, "Calibri")
+
+        document.add_picture('placeholder.gif', width=Inches(3))
+        document.add_paragraph('')
+
+    return document
